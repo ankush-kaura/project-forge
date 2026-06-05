@@ -1,0 +1,66 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: development
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://localhost:1337
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "127.0.0.1:1337:1337"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/config:/app/config
+      # Keep generated project workspaces outside /app. Strapi develop watches
+      # /app and hot-restarts when files are created there, which kills builds.
+      - forge_builds:/forge-builds
+    depends_on:
+      database:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - PORT=1337
+      - FORGE_BUILD_ROOT=/forge-builds
+    command: ["npm", "run", "develop"]
+    restart: unless-stopped
+
+  telegram-bot:
+    build: ./telegram-bot
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  database:
+    image: postgres:16-alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forge -d project_forge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  forge_builds:

@@ -1,0 +1,39 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+dist/
+build/
+.cache/
+.tmp/
+.strapi/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# OS/editor noise
+._*
+.DS_Store
+.vscode/
+.idea/
+
+# Local/generated workspaces and backups
+backend/src.bak-forgemvp/
+backend/src.bak*/
+builds/
+
+# Strapi generated artifacts
+backend/types/
+backend/dist/
+backend/build/
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+
+# Local TLS material. Never commit private keys/certificates.
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+!nginx/ssl/.gitkeep

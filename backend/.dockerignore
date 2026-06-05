@@ -1,0 +1,10 @@
+node_modules
+.git
+*.log
+.env
+tmp
+.cache
+src.bak*
+dist
+build
+builds
