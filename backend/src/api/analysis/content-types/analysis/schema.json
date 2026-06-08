@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "analyses",
+  "info": {
+    "singularName": "analysis",
+    "pluralName": "analyses",
+    "displayName": "Analysis"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "idea": { "type": "relation", "relation": "oneToOne", "target": "api::idea.idea" },
+    "problem_statement": { "type": "text" },
+    "target_audience": { "type": "text" },
+    "business_model": { "type": "text" },
+    "revenue_potential": { "type": "enumeration", "enum": ["low", "medium", "high"] },
+    "technical_complexity": { "type": "enumeration", "enum": ["low", "medium", "high"] },
+    "dev_effort_hours": { "type": "integer" },
+    "risk_assessment": { "type": "text" },
+    "market_opportunity": { "type": "text" },
+    "viability_score": { "type": "integer", "min": 0, "max": 100 },
+    "raw_ai_output": { "type": "text" }
+  }
+}

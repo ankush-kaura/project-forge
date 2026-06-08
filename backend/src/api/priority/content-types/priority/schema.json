@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "priorities",
+  "info": {
+    "singularName": "priority",
+    "pluralName": "priorities",
+    "displayName": "Priority"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "idea": { "type": "relation", "relation": "oneToOne", "target": "api::idea.idea" },
+    "revenue_score": { "type": "integer", "min": 1, "max": 10 },
+    "interest_score": { "type": "integer", "min": 1, "max": 10 },
+    "opportunity_score": { "type": "integer", "min": 1, "max": 10 },
+    "complexity_score": { "type": "integer", "min": 1, "max": 10 },
+    "final_score": { "type": "float" },
+    "rank": { "type": "integer" }
+  }
+}

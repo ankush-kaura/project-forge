@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ideas",
+  "info": {
+    "singularName": "idea",
+    "pluralName": "ideas",
+    "displayName": "Idea",
+    "description": "Project ideas"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "text", "required": true },
+    "description": { "type": "richtext", "required": true },
+    "tags": { "type": "json" },
+    "category": {
+      "type": "enumeration",
+      "enum": ["saas", "tool", "api", "ai", "mobile", "other"],
+      "default": "other"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["captured", "analyzing", "analyzed", "prioritized", "brainstorming", "building", "launched", "archived"],
+      "default": "captured"
+    },
+    "source": { "type": "string", "default": "manual" },
+    "analysis": { "type": "relation", "relation": "oneToOne", "target": "api::analysis.analysis" },
+    "priority": { "type": "relation", "relation": "oneToOne", "target": "api::priority.priority" },
+    "repo": { "type": "relation", "relation": "oneToOne", "target": "api::repo.repo" },
+    "notes": { "type": "relation", "relation": "oneToMany", "target": "api::note.note" },
+    "brainstorm_sessions": { "type": "relation", "relation": "oneToMany", "target": "api::brainstorm-session.brainstorm-session", "mappedBy": "idea" }
+  }
+}
