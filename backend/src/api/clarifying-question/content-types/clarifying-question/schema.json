@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "clarifying_questions",
+  "info": {
+    "singularName": "clarifying-question",
+    "pluralName": "clarifying-questions",
+    "displayName": "Clarifying Question",
+    "description": "Q&A questions for brainstorm sessions"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "session": { "type": "relation", "relation": "manyToOne", "target": "api::brainstorm-session.brainstorm-session", "inversedBy": "questions" },
+    "question_text": { "type": "text", "required": true },
+    "question_type": {
+      "type": "enumeration",
+      "enum": ["single_choice", "multiple_choice", "text", "boolean"],
+      "default": "text"
+    },
+    "options": { "type": "json" },
+    "context": { "type": "text" },
+    "answer": { "type": "text" },
+    "asked_via": {
+      "type": "enumeration",
+      "enum": ["web", "telegram", "both"],
+      "default": "both"
+    },
+    "answered_via": {
+      "type": "enumeration",
+      "enum": ["web", "telegram"],
+      "required": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "answered", "skipped"],
+      "default": "pending"
+    },
+    "follow_up_for": { "type": "relation", "relation": "manyToOne", "target": "api::clarifying-question.clarifying-question" },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

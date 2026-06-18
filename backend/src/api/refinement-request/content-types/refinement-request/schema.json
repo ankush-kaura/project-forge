@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "refinement_requests",
+  "info": {
+    "singularName": "refinement-request",
+    "pluralName": "refinement-requests",
+    "displayName": "Refinement Request",
+    "description": "Iteration/refinement requests for brainstorm sessions"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "session": { "type": "relation", "relation": "manyToOne", "target": "api::brainstorm-session.brainstorm-session", "inversedBy": "refinements" },
+    "request_text": { "type": "text", "required": true },
+    "target_layers": { "type": "json" },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "analyzing", "processing", "completed", "failed"],
+      "default": "pending"
+    },
+    "impact_analysis": { "type": "text" },
+    "changes_made": { "type": "text" },
+    "iteration_number": { "type": "integer", "default": 1 }
+  }
+}

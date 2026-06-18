@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "build_steps",
+  "info": {
+    "singularName": "build-step",
+    "pluralName": "build-steps",
+    "displayName": "Build Step",
+    "description": "Individual build layer steps in a brainstorm session"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "session": { "type": "relation", "relation": "manyToOne", "target": "api::brainstorm-session.brainstorm-session", "inversedBy": "build_steps" },
+    "layer": { "type": "string", "required": true },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "generating", "completed", "failed", "approved", "regenerating"],
+      "default": "pending"
+    },
+    "prompt_used": { "type": "text" },
+    "output_summary": { "type": "text" },
+    "files_generated": { "type": "json" },
+    "error_message": { "type": "text" },
+    "started_at": { "type": "datetime" },
+    "completed_at": { "type": "datetime" },
+    "order": { "type": "integer", "default": 0 },
+    "retry_count": { "type": "integer", "default": 0 },
+    "model_used": { "type": "string" }
+  }
+}

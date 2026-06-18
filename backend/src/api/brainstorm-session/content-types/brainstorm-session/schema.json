@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brainstorm_sessions",
+  "info": {
+    "singularName": "brainstorm-session",
+    "pluralName": "brainstorm-sessions",
+    "displayName": "Brainstorm Session",
+    "description": "AI brainstorming sessions for ideas"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "idea": { "type": "relation", "relation": "manyToOne", "target": "api::idea.idea", "inversedBy": "brainstorm_sessions" },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "brainstorming", "awaiting_architecture_approval", "qa_in_progress", "qa_completed", "awaiting_plan_approval", "ready_to_build", "building", "build_completed", "awaiting_review", "completed", "refining", "failed"],
+      "default": "pending"
+    },
+    "architecture_proposal": { "type": "json" },
+    "chosen_architecture": { "type": "json" },
+    "human_approval_stage": {
+      "type": "enumeration",
+      "enum": ["none", "architecture_approved", "qa_approved", "build_approved"],
+      "default": "none"
+    },
+    "build_layers": { "type": "json" },
+    "current_build_layer": { "type": "string" },
+    "build_progress": { "type": "integer", "default": 0, "min": 0, "max": 100 },
+    "generated_repo_url": { "type": "string" },
+    "iteration_count": { "type": "integer", "default": 0 },
+    "qa_summary": { "type": "json" },
+    "build_steps": { "type": "relation", "relation": "oneToMany", "target": "api::build-step.build-step", "mappedBy": "session" },
+    "questions": { "type": "relation", "relation": "oneToMany", "target": "api::clarifying-question.clarifying-question", "mappedBy": "session" },
+    "refinements": { "type": "relation", "relation": "oneToMany", "target": "api::refinement-request.refinement-request", "mappedBy": "session" }
+  }
+}
