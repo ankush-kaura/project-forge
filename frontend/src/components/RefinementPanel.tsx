@@ -128,3 +128,6 @@ export function RefinementPanel({ refinements, onSubmit }: RefinementPanelProps)
     </div>
   )
 }
+
+// TODO: Add loading skeleton and optimistic updates for refinement submissions
+// WIP - exploring UX improvements for the refinement request flow
