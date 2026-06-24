@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+/*
+ * Deterministic stand-in for the real `codex` binary, used by tests and CI via
+ * CODEX_COMMAND. It never contacts a model. It mimics the subset of
+ * `codex exec` the backend relies on: parse --output-last-message and write a
+ * controllable result there, optionally logging argv and sleeping.
+ *
+ * Behaviour is driven entirely by env vars so a single committed file covers
+ * every test scenario:
+ *   CODEX_FAKE_OUTPUT        string written to the --output-last-message file
+ *   CODEX_FAKE_OUTPUTS       \u0001-separated outputs, indexed by invocation #
+ *   CODEX_FAKE_COUNTER_FILE  path used to track the invocation index
+ *   CODEX_FAKE_SLEEP_MS      delay before writing (to exercise timeout/kill)
+ *   CODEX_FAKE_EXIT_CODE     non-zero to simulate a failed codex run
+ *   CODEX_ARGV_LOG           append-only log of received argv (one JSON line each)
+ */
+const fs = require('fs');
+
+const args = process.argv.slice(2);
+
+if (process.env.CODEX_ARGV_LOG) {
+  try { fs.appendFileSync(process.env.CODEX_ARGV_LOG, JSON.stringify(args) + '\n'); } catch {}
+}
+
+function flagValue(name) {
+  const i = args.indexOf(name);
+  return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined;
+}
+
+let index = 0;
+if (process.env.CODEX_FAKE_COUNTER_FILE) {
+  try { index = parseInt(fs.readFileSync(process.env.CODEX_FAKE_COUNTER_FILE, 'utf8'), 10) || 0; } catch {}
+  try { fs.writeFileSync(process.env.CODEX_FAKE_COUNTER_FILE, String(index + 1)); } catch {}
+}
+
+function selectedOutput() {
+  if (process.env.CODEX_FAKE_OUTPUTS !== undefined) {
+    const parts = process.env.CODEX_FAKE_OUTPUTS.split('\u0001');
+    return parts[Math.min(index, parts.length - 1)];
+  }
+  if (process.env.CODEX_FAKE_OUTPUT !== undefined) return process.env.CODEX_FAKE_OUTPUT;
+  return '{"ok":true,"word":"forge"}';
+}
+
+function finish() {
+  const outFile = flagValue('--output-last-message');
+  const output = selectedOutput();
+  if (outFile) {
+    try { fs.writeFileSync(outFile, output); } catch {}
+  }
+  process.stdout.write(JSON.stringify({ type: 'turn.completed', usage: {} }) + '\n');
+  process.exit(parseInt(process.env.CODEX_FAKE_EXIT_CODE || '0', 10) || 0);
+}
+
+const sleepMs = parseInt(process.env.CODEX_FAKE_SLEEP_MS || '0', 10) || 0;
+if (sleepMs > 0) setTimeout(finish, sleepMs);
+else finish();
