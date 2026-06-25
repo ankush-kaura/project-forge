@@ -7,6 +7,7 @@ Extended with: brainstorm, Q&A, build, and refinement commands.
 """
 
 import os
+RECONNECT_DELAY = 5  # seconds between reconnection attempts
 import json
 import time
 import logging
